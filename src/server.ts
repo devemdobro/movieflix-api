@@ -23,15 +23,19 @@ app.get("/movies", async (_, res) => {
 app.post("/movies", async (req, res) => {
     const { title, genre_id, language_id, oscar_count, release_date } = req.body;
     
-    await prisma.movie.create({
-        data: {
-            title,
-            genre_id,
-            language_id,
-            oscar_count,
-            release_date: new Date(release_date)
-        }
-    });
+    try{
+        await prisma.movie.create({
+            data: {
+                title,
+                genre_id,
+                language_id,
+                oscar_count,
+                release_date: new Date(release_date)
+            }
+        });
+    }catch(error){
+        return res.status(500).send({message: "Falha ao cadastrar um filme"});
+    }
 
     res.status(201).send();
 });
