@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,4 +5,33 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model Genre {
+  id     Int     @id @default(autoincrement())
+  name   String? @db.VarChar(100)
+  movies Movie[]
+
+  @@map("genres")
+}
+
+model Language {
+  id     Int     @id @default(autoincrement())
+  name   String? @db.VarChar(100)
+  movies Movie[]
+
+  @@map("languages")
+}
+
+model Movie {
+  id           Int       @id @default(autoincrement())
+  title        String?   @db.VarChar(100)
+  release_date DateTime? @db.Date
+  genre_id     Int?
+  language_id  Int?
+  oscar_count  Int?
+  genres       Genre?    @relation(fields: [genre_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_genre")
+  languages    Language? @relation(fields: [language_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_language")
+
+  @@map("movies")
 }
