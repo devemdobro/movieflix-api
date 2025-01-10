@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  movieflix-postgres:
+    image: postgres:15
+    container_name: movieflix-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: movieflix-db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+
+  movieflix-pgadmin:
+    image: dpage/pgadmin4
+    container_name: movieflix-pgadmin
+    restart: always
+    depends_on:
+      - movieflix-postgres
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=user@email.com
+      - PGADMIN_DEFAULT_PASSWORD=password
+    ports:
+      - "5050:80"
+    volumes:
+      - ./data/pgadmin:/var/lib/pgadmin
